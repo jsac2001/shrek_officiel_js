@@ -1,0 +1,396 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#audio-controls {
+  margin-top: 20px;
+}
+
+#play-pause-btn {
+  background-color: #4caf50; /* Vert */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+}
+
+#play-pause-btn:hover {
+  background-color: white;
+  color: black;
+  border: 2px solid #4caf50;
+}
+
+#volume-slider {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 8px;
+  background: #ddd;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  margin-left: 20px;
+}
+
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #4caf50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+background #volume-slider::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #4caf50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-image: url("img/SWAMP.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: #c0fd9a;
+  border-width: 18px;
+}
+
+/* Styles pour les scènes */
+.scene {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#start-scene,
+#end-scene {
+  color: #fff;
+  text-align: center;
+}
+
+#start-button,
+#end-restart-button {
+  height: auto;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px 30px;
+  background-color: #45df23;
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 20px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#start-button:hover,
+#end-restart-button:hover {
+  background-color: #3f0101;
+  transform: scale(1.1);
+}
+
+/* Styles existants */
+.card {
+  margin-left: auto;
+  margin-top: 100px;
+  width: 595px;
+  height: 842px;
+  background-color: #82a279;
+  border-radius: 10px;
+  box-shadow: 0 0 0 18px #c0fd9a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.enemy-card {
+  display: none;
+}
+
+.attackname {
+  font: bold;
+}
+
+.heroPart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.header {
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 25px;
+}
+
+.realname .name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pvHolder {
+  width: 10%;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: end;
+}
+
+.realname {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.pv {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.pvPoints {
+  font-size: 20px;
+}
+
+.attackName {
+  font-size: 20px;
+}
+
+.typeStrength {
+  width: 150px;
+  display: flex;
+  align-items: start;
+}
+
+.leftStats {
+  display: flex;
+  align-items: start;
+}
+
+.hero {
+  width: 100%;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.hero img {
+  width: 100%;
+  height: 296px;
+  display: flex;
+  margin: auto;
+  border: solid #c0fd9a;
+}
+
+.attacks {
+  margin: 0px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 10%;
+  padding-right: 10%;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.firstAttack {
+  margin-bottom: 10px;
+}
+
+.attackStats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.divider {
+  display: flex;
+  background: #dddddd;
+  height: 25px;
+  align-items: center;
+}
+
+.leftText {
+  background: #dddddd;
+  margin-left: 10px;
+  margin-right: auto;
+}
+
+.rightText {
+  text-align: end;
+  background: #dddddd;
+  margin-right: 10px;
+}
+
+.footer {
+  padding: 20px;
+  color: #fff;
+  display: flex;
+  margin-left: auto;
+  text-align: end;
+}
+
+.hero-button {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  height: 192px;
+  align-items: center;
+  justify-content: center;
+  width: 256px;
+  background: #c0fd9a;
+}
+
+.hero-button:hover {
+  background-image: url("img/ass.png");
+  background-size: cover;
+}
+
+.heroes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.selectShrekButton {
+  margin-top: 50px;
+  height: 50px;
+  border-radius: 15px;
+  color: #000000;
+  background: #45df23;
+  border: none;
+  transform: scale(1);
+  transition: 0.1s;
+}
+
+.selectShrekButton:hover {
+  cursor: pointer;
+  color: #fff;
+  background: #3f0101;
+  transform: scale(1.1);
+  transition: 0.1s;
+}
+
+.hero-org {
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+}
+
+.complet {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.tqt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.attack-buttons button {
+  margin: 5px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.attack-buttons button:hover {
+  background-color: #45a049;
+}
+
+.attackButton {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.attackButton:hover {
+  background-color: #45a049;
+}
+
+.attacksTag {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  height: 50px;
+  width: 180px;
+  gap: 25px;
+  border-radius: 4px;
+}
+
+.restart-button {
+  display: none;
+  border: none;
+  border-radius: 15px;
+  background: #45a049;
+  align-items: center;
+  margin-top: 50px;
+  height: 25px;
+}
+
+.restart-button:hover {
+  cursor: pointer;
+  background: #45df23;
+}
+
+.buttoncontainer {
+  gap: 25px;
+  margin: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+#message-log {
+  width: 100%;
+  height: auto;
+  background: black;
+  color: #45df23;
+  max-width: 13vw;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+#combat-log-title {
+  color: #45df23;
+}

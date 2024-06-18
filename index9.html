@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="script.js" />
+    <title>Shrek Fighter</title>
+  </head>
+
+  <body>
+    <audio
+      id="background-music"
+      src="mp3/Farfadet maléfique 1h.mp3"
+      type="audio/mp3"
+    ></audio>
+
+    <div class="tqt">
+      <div id="start-scene" class="scene">
+        <h1>Bienvenue sur Shrek Fighter</h1>
+        <button id="start-button">Commencer</button>
+      </div>
+
+      <div id="game-scene" class="scene" style="display: none">
+        <div class="complet">
+          <div class="card">
+            <div class="heroPart">
+              <div class="header">
+                <div class="name">
+                  <div id="card-name" class="realname"></div>
+                </div>
+                <div class="pvHolder">
+                  <div class="pv">PV</div>
+                  <div id="card-pv" class="pvPoints"></div>
+                  <div class="pvPhoto">
+                    <img src="/img/type.png" alt="type" />
+                  </div>
+                </div>
+              </div>
+              <div class="hero">
+                <img id="card-image" src="/img/shrek.png" alt="" />
+              </div>
+            </div>
+
+            <div class="attacks" id="card-attacks"></div>
+
+            <div class="divider">
+              <div class="leftText">Attention Shrek énervé</div>
+              <div class="rightText">Pas de retraite possible</div>
+            </div>
+
+            <div class="footer">
+              Ne peut être mis sur le terrain <br />
+              seulement après avoir vraiment regardé <br />
+              l’adversaire de manière séductrice
+            </div>
+          </div>
+
+          <div class="buttoncontainer">
+            <h1 id="combat-log-title">Combat Log</h1>
+            <div id="message-log"></div>
+            <div id="attacksTag" class="attacksTag"></div>
+            <button id="restart-button" class="restart-button">
+              Recommencer
+            </button>
+          </div>
+
+          <div class="enemy-card">
+            <div class="card">
+              <div class="heroPart">
+                <div class="header">
+                  <div class="name">
+                    <div id="enemy-name" class="realname"></div>
+                  </div>
+                  <div class="pvHolder">
+                    <div class="pv">PV</div>
+                    <div id="enemy-pv" class="pvPoints"></div>
+                    <div class="pvPhoto">
+                      <img src="/img/type.png" alt="type" />
+                    </div>
+                  </div>
+                </div>
+                <div class="hero">
+                  <img id="enemy-image" src="" alt="" />
+                </div>
+              </div>
+              <div class="attacks" id="enemy-attacks"></div>
+              <div class="divider">
+                <div class="leftText">Attention, Shrek énervé</div>
+                <div class="rightText">Pas de retraite possible</div>
+              </div>
+              <div class="footer">
+                Ne peut être mis sur le terrain <br />
+                seulement après avoir vraiment regardé <br />
+                l’adversaire de manière séductrice
+              </div>
+            </div>
+          </div>
+          <div class="hero-org">
+            <div id="heroes" class="heroes"></div>
+            <button id="selectShrekButton" class="selectShrekButton">
+              Sélectionner ce Shrek
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="audio-controls">
+        <button id="play-pause-btn">Play</button>
+        <input
+          type="range"
+          id="volume-slider"
+          min="0"
+          max="1"
+          step="0.01"
+          value="1"
+        />
+      </div>
+
+      <div id="end-scene" class="scene" style="display: none">
+        <h1 id="end-message"></h1>
+        <button id="end-restart-button" class="restart-button">
+          Recommencer
+        </button>
+      </div>
+    </div>
+
+    <template id="spell-template">
+      <div class="spells">
+        <div class="attackStats">
+          <div class="leftStats">
+            <div class="typeStrength" id="spell-types"></div>
+            <div class="attackName" id="spell-name"></div>
+          </div>
+          <div class="attackPoints" id="spell-damage"></div>
+        </div>
+        <div class="spell-description" id="spell-description"></div>
+      </div>
+    </template>
+
+    <div id="combat-log"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var audio = document.getElementById("background-music");
+        var playPauseBtn = document.getElementById("play-pause-btn");
+        var volumeSlider = document.getElementById("volume-slider");
+
+        // Play/Pause functionality
+        playPauseBtn.addEventListener("click", function () {
+          if (audio.paused) {
+            audio.play();
+            playPauseBtn.textContent = "Pause";
+          } else {
+            audio.pause();
+            playPauseBtn.textContent = "Play";
+          }
+        });
+
+        // Volume control functionality
+        volumeSlider.addEventListener("input", function () {
+          audio.volume = volumeSlider.value;
+        });
+      });
+
+      let heroes = [
+        {
+          name: "Shrek (White Edition™)",
+          spells: [
+            {
+              attackName: "Force du marécage",
+              damage: 60,
+              description:
+                "Puise de la force de ses intestins et annihile la zone ou l’adversaire se trouve touchant tout le monde, y compris les alliés.",
+              "spell-count": 1,
+            },
+            {
+              attackName: "Regard perforant",
+              damage: 150,
+              description:
+                "Regarde Intensivement l’adversaire jusqu’à pénétrer son âme.",
+              "spell-count": 2,
+            },
+          ],
+          pv: 2500,
+          image: "/img/shrek.png",
+        },
+        {
+          name: "Chat Botté",
+          spells: [
+            {
+              attackName: "Griffe Rapide",
+              damage: 70,
+              description:
+                "Attaque avec une série de coups de griffe rapides, infligeant des dégâts successifs à son adversaire.",
+              "spell-count": 1,
+            },
+            {
+              attackName: "Charme Chaotique",
+              damage: 200,
+              description:
+                "Utilise son célèbre regard attendrissant pour distraire l'adversaire suivi d'une attaque dévastatrice.",
+              "spell-count": 3,
+            },
+          ],
+          pv: 2200,
+          image: "/img/chat.png",
+        },
+        {
+          name: "L'Âne",
+          spells: [
+            {
+              attackName: "Ruade Surprise",
+              damage: 30,
+              description:
+                "Donne un coup de sabot rapide et imprévisible, causant des dégâts à l'adversaire et le désorientant.",
+              "spell-count": 1,
+            },
+            {
+              attackName: "Blague Déroutante",
+              damage: 400,
+              description:
+                "Raconte une blague hilarante, faisant tellement rire que l'adversaire suffoque.",
+              "spell-count": 3,
+            },
+          ],
+          pv: 1500,
+          image: "/img/ane.png",
+        },
+        {
+          name: "Lord Farquaad",
+          spells: [
+            {
+              attackName: "Ordre Impératif",
+              damage: 40,
+              description:
+                "Commande à ses soldats d’attaquer, infligeant des dégâts à l’adversaire grâce à une frappe coordonnée.",
+              "spell-count": 1,
+            },
+            {
+              attackName: "Despotisme Cruel",
+              damage: 350,
+              description:
+                "Utilise son pouvoir tyrannique et force des paysans à se sacrifier POUR SA GLOIRE !!! (Ébourrifant).",
+              "spell-count": 2,
+            },
+          ],
+          pv: 1250,
+          image: "/img/farquad.png",
+        },
+        {
+          name: "Prince Charmant",
+          spells: [
+            {
+              attackName: "Coup d’Épée",
+              damage: 50,
+              description:
+                "Lance un coup d’épée précis et puissant, infligeant des dégâts importants à l’ennemi.",
+              "spell-count": 1,
+            },
+            {
+              attackName: "Charme Irrésistible",
+              damage: 250,
+              description:
+                "Utilise son charme naturel pour envoûter l'adversaire, le forçant à se frapper lui même.",
+              "spell-count": 3,
+            },
+          ],
+          pv: 3000,
+          image: "/img/prince.png",
+        },
+        {
+          name: "Fiona",
+          spells: [
+            {
+              attackName: "Coup de Poing Ogre",
+              damage: 30,
+              description:
+                "Sous sa forme d'ogresse, donne un coup de poing puissant qui inflige de lourds dégâts à l'adversaire.",
+              "spell-count": 1,
+            },
+            {
+              attackName: "Chant Enchanteur",
+              damage: 500,
+              description:
+                "Chante une mélodie envoûtante qui extermine les oreilles ennemies, ingligeants d'énormes dégâts",
+              "spell-count": 3,
+            },
+          ],
+          pv: 1800,
+          image: "/img/fiona.png",
+        },
+      ];
+
+      let nameTag = document.getElementById("card-name");
+      let pvTag = document.getElementById("card-pv");
+      let imageTag = document.getElementById("card-image");
+      let attacksTag = document.getElementById("card-attacks");
+      let enemyNameTag = document.getElementById("enemy-name");
+      let enemyPvTag = document.getElementById("enemy-pv");
+      let enemyImageTag = document.getElementById("enemy-image");
+      let enemyAttacksTag = document.getElementById("enemy-attacks");
+      let combatLog = document.getElementById("combat-log");
+      let restartButton = document.getElementById("restart-button");
+      let selectedShrek = null;
+      let enemyShrek = null;
+
+      function displayCard(hero) {
+        imageTag.src = hero.image;
+        nameTag.innerText = hero.name;
+        pvTag.innerText = hero.pv;
+
+        attacksTag.innerHTML = "";
+
+        for (let spell of hero.spells) {
+          let spellTemplate = document
+            .getElementById("spell-template")
+            .content.cloneNode(true);
+          spellTemplate.querySelector("#spell-name").innerText =
+            spell.attackName;
+          spellTemplate.querySelector("#spell-damage").innerText = spell.damage;
+          spellTemplate.querySelector("#spell-description").innerText =
+            spell.description;
+
+          let typeStrengthDiv = spellTemplate.querySelector("#spell-types");
+          for (let i = 0; i < spell["spell-count"]; i++) {
+            let typeImg = document.createElement("img");
+            typeImg.src = "/img/type.png";
+            typeImg.alt = "type";
+            typeStrengthDiv.appendChild(typeImg);
+          }
+
+          attacksTag.appendChild(spellTemplate);
+        }
+      }
+
+      function displayEnemyCard(enemy) {
+        enemyNameTag.innerText = enemy.name;
+        enemyPvTag.innerText = enemy.pv;
+        enemyImageTag.src = enemy.image;
+
+        enemyAttacksTag.innerHTML = "";
+
+        for (let spell of enemy.spells) {
+          let spellTemplate = document
+            .getElementById("spell-template")
+            .content.cloneNode(true);
+          spellTemplate.querySelector("#spell-name").innerText =
+            spell.attackName;
+          spellTemplate.querySelector("#spell-damage").innerText = spell.damage;
+          spellTemplate.querySelector("#spell-description").innerText =
+            spell.description;
+
+          let typeStrengthDiv = spellTemplate.querySelector("#spell-types");
+          for (let i = 0; i < spell["spell-count"]; i++) {
+            let typeImg = document.createElement("img");
+            typeImg.src = "/img/type.png";
+            typeImg.alt = "type";
+            typeStrengthDiv.appendChild(typeImg);
+          }
+
+          enemyAttacksTag.appendChild(spellTemplate);
+        }
+      }
+
+      function selectShrek(hero) {
+        selectedShrek = hero;
+        displayCard(hero);
+      }
+
+      function startCombat() {
+        if (selectedShrek) {
+          const remainingShreks = heroes.filter(
+            (hero) => hero !== selectedShrek
+          );
+          enemyShrek =
+            remainingShreks[Math.floor(Math.random() * remainingShreks.length)];
+          displayCard(selectedShrek);
+          displayEnemyCard(enemyShrek);
+          document.getElementById("heroes").style.display = "none";
+          document.getElementById("selectShrekButton").style.display = "none";
+          document.querySelector(".enemy-card").style.display = "block";
+          document.getElementById("restart-button").style.display = "block";
+          console.log(
+            "Combat démarré entre",
+            selectedShrek.name,
+            "et",
+            enemyShrek.name
+          );
+
+          let playerTurn = true;
+
+          function executeAttack(attacker, defender, attack) {
+            const messageLog = document.getElementById("message-log");
+            let message = attacker.name + " utilise " + attack.attackName + "!";
+            messageLog.innerHTML = "<p>" + message + "</p>";
+
+            defender.pv -= attack.damage;
+            message = defender.name + " a maintenant " + defender.pv + " PV.";
+            messageLog.innerHTML += "<p>" + message + "</p>";
+
+            if (defender === selectedShrek) {
+              pvTag.innerText = selectedShrek.pv;
+            } else if (defender === enemyShrek) {
+              enemyPvTag.innerText = enemyShrek.pv;
+            }
+
+            if (defender.pv <= 0) {
+              message = " Victoire ! " + defender.name + " est vaincu.";
+              messageLog.innerHTML += "<p>" + message + "</p>";
+              endGame(attacker.name === selectedShrek.name);
+            }
+          }
+
+          function playerAttack() {
+            let attackOptions = document.getElementById("attacksTag");
+            attackOptions.innerHTML = "";
+
+            selectedShrek.spells.forEach((spell) => {
+              const attackButton = document.createElement("button");
+              attackButton.innerText =
+                spell.attackName + " (" + spell.damage + " damage)";
+              attackButton.onclick = () => {
+                executeAttack(selectedShrek, enemyShrek, spell);
+                if (enemyShrek.pv <= 0) {
+                  console.log("Victoire ! " + enemyShrek.name + " est vaincu.");
+                  attackOptions.innerHTML = "";
+                } else {
+                  playerTurn = false;
+                  setTimeout(enemyAttack, 2000);
+                }
+              };
+              attackOptions.appendChild(attackButton);
+            });
+          }
+
+          function enemyAttack() {
+            let randomAttackIndex = Math.floor(
+              Math.random() * enemyShrek.spells.length
+            );
+            let chosenAttack = enemyShrek.spells[randomAttackIndex];
+            executeAttack(enemyShrek, selectedShrek, chosenAttack);
+
+            if (selectedShrek.pv <= 0) {
+              console.log("Défaite! " + selectedShrek.name + " est vaincu.");
+              return;
+            }
+
+            playerTurn = true;
+            setTimeout(playerAttack, 1000);
+          }
+
+          playerAttack();
+        } else {
+          console.log(
+            "Veuillez sélectionner un Shrek avant de lancer le combat."
+          );
+        }
+      }
+
+      function endGame(playerWon) {
+        document.getElementById("game-scene").style.display = "none";
+        document.getElementById("end-scene").style.display = "block";
+        document.getElementById("end-restart-button").style.display = "block";
+        document.getElementById("end-message").innerText = playerWon
+          ? "Victoire !"
+          : "Défaite...";
+        document.getElementById("background-music").pause();
+        document.getElementById("background-music").currentTime = 0;
+      }
+
+      document
+        .getElementById("start-button")
+        .addEventListener("click", function () {
+          document.getElementById("start-scene").style.display = "none";
+          document.getElementById("game-scene").style.display = "block";
+        });
+
+      document
+        .getElementById("restart-button")
+        .addEventListener("click", function () {
+          document.location.reload();
+        });
+
+      document
+        .getElementById("end-restart-button")
+        .addEventListener("click", function () {
+          document.location.reload();
+        });
+
+      document
+        .getElementById("selectShrekButton")
+        .addEventListener("click", startCombat);
+
+      const heroesTag = document.getElementById("heroes");
+
+      for (let hero of heroes) {
+        const newButton = document.createElement("button");
+        newButton.classList.add("hero-button");
+        newButton.innerText = hero.name;
+        newButton.addEventListener("click", function () {
+          selectShrek(hero);
+        });
+        heroesTag.appendChild(newButton);
+      }
+    </script>
+  </body>
+</html>
